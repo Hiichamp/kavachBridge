@@ -1,0 +1,12 @@
+{
+  "name": "kavachbridge-simulation",
+  "version": "1.0.0",
+  "description": "Train position simulator for KavachBridge",
+  "main": "trainSimulator.js",
+  "scripts": {
+    "start": "node trainSimulator.js"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.7.5"
+  }
+}
