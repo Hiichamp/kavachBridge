@@ -1,42 +1,33 @@
 /**
- * App.jsx — KavachBridge v2.1 FIXED
- * Removed stale `tokens` prop. Updated stat pill colors to match new palette.
+ * App.jsx — KavachBridge v3.0
+ * Added: Black Box Log, SM Alerts, Speed Violations, Kanchanjunga Replay
  */
 import { useState } from 'react';
 import './index.css';
-import SplashScreen from './components/SplashScreen';
-import MapView from './components/MapView';
-import Dashboard from './components/Dashboard';
-import KanchanjungaOverlay from './components/KanchanjungaOverlay';
-import { WeatherControlModal, RainOverlay, FogOverlay } from './components/WeatherEffects';
+import SplashScreen          from './components/SplashScreen';
+import MapView               from './components/MapView';
+import Dashboard             from './components/Dashboard';
+import KanchanjungaOverlay   from './components/KanchanjungaOverlay';
+import KanchanjungaReplay    from './components/KanchanjungaReplay';
 import { useTrainSimulation } from './hooks/useTrainSimulation';
 
 export default function App() {
   const [started, setStarted] = useState(false);
-  const [weatherModal, setWeatherModal] = useState({ visible: false, trackId: '', trackColor: '' });
 
   const {
-    running,
-    trains,
-    zones,
-    conflicts,
-    stats,
-    tokenAnimations,
-    safeModeActive,
-    kanchanjungaActive,
-    tokenLog,
-    activeWeather,
-    applyWeather,
-    startSimulation,
-    toggleSafeMode,
+    running, trains, zones, conflicts, stats,
+    tokenLog, tokenAnimations,
+    safeModeActive, kanchanjungaActive,
+    startSimulation, toggleSafeMode,
+    // Feature 1
+    incidentLog,
+    // Feature 2
+    smAlerts, smEscalations,
+    // Feature 3
+    violations,
+    // Feature 4
+    replayActive, triggerReplay, onReplayComplete,
   } = useTrainSimulation();
-
-  // Expose global function for map buttons
-  if (typeof window !== 'undefined') {
-    window.openWeatherModal = (trackId, color) => {
-      setWeatherModal({ visible: true, trackId, trackColor: color });
-    };
-  }
 
   const handleStart = () => {
     setStarted(true);
@@ -45,10 +36,8 @@ export default function App() {
 
   return (
     <>
-      {/* Splash — shown until "Start Demo" clicked */}
       {!started && <SplashScreen onStart={handleStart} />}
 
-      {/* Main app shell — always rendered so Leaflet map initialises */}
       <div className="app-v2">
 
         {/* ── Header ── */}
@@ -63,17 +52,11 @@ export default function App() {
 
           {/* Live stat pills */}
           <div className="header-stats">
-            <StatPill
-              value={trains.filter((t) => t.zoneType === 'kavach').length}
-              label="Kavach" color="#00C896"
-            />
-            <StatPill
-              value={trains.filter((t) => t.zoneType === 'manual').length}
-              label="Manual" color="#FF4444"
-            />
-            <StatPill value={stats.activeTokens ?? 0}           label="Tokens"   color="#4DA6FF" />
-            <StatPill value={stats.conflictsPrevented ?? 0}     label="Prevented" color="#f59e0b" />
-            <StatPill value={`#${stats.loopCount ?? 0}`}        label="Loop"     color="#8b5cf6" />
+            <StatPill value={trains.filter(t => t.zoneType === 'kavach').length} label="Kavach"   color="#00C896" />
+            <StatPill value={trains.filter(t => t.zoneType === 'manual').length} label="Manual"   color="#FF4444" />
+            <StatPill value={stats.activeTokens       ?? 0} label="Tokens"   color="#4DA6FF" />
+            <StatPill value={stats.conflictsPrevented ?? 0} label="Prevented" color="#f59e0b" />
+            <StatPill value={`#${stats.loopCount ?? 0}`}   label="Loop"      color="#8b5cf6" />
           </div>
 
           <div className="header-right">
@@ -81,6 +64,33 @@ export default function App() {
               <span className="live-dot" />
               {running ? 'LIVE' : 'READY'}
             </div>
+
+            {/* Feature 4 — Replay button */}
+            {running && (
+              <button
+                onClick={triggerReplay}
+                title="Replay the June 17, 2024 Kanchanjunga crash scenario"
+                style={{
+                  padding: '7px 13px',
+                  background: 'linear-gradient(135deg, #7B0000, #CC0000)',
+                  border: '1px solid rgba(255,68,68,0.6)',
+                  borderRadius: 6,
+                  color: 'white',
+                  fontWeight: 700,
+                  fontSize: 11,
+                  cursor: 'pointer',
+                  boxShadow: '0 0 12px rgba(255,0,0,0.3)',
+                  fontFamily: 'Inter, sans-serif',
+                  transition: 'box-shadow 0.2s',
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={e => e.target.style.boxShadow = '0 0 24px rgba(255,0,0,0.6)'}
+                onMouseLeave={e => e.target.style.boxShadow = '0 0 12px rgba(255,0,0,0.3)'}
+                id="replay-kanchanjunga"
+              >
+                🔴 Replay Kanchanjunga
+              </button>
+            )}
           </div>
         </header>
 
@@ -105,10 +115,6 @@ export default function App() {
               onTrainSelect={() => {}}
             />
 
-            {/* Weather overlays */}
-            {Object.values(activeWeather).some(w => w.type === 'rain') && <RainOverlay />}
-            {Object.values(activeWeather).some(w => w.type === 'fog')  && <FogOverlay />}
-
             {running && (
               <div className="loop-badge">
                 🔄 Loop #{stats.loopCount} · {stats.tokensIssuedTotal} tokens · {stats.conflictsPrevented} prevented
@@ -116,31 +122,28 @@ export default function App() {
             )}
           </div>
 
+          {/* Dashboard sidebar with all 4 features wired */}
           <Dashboard
             trains={trains}
             conflicts={conflicts}
             stats={stats}
             tokenLog={tokenLog}
             safeModeActive={safeModeActive}
-            activeWeather={activeWeather}
             onToggleSafeMode={toggleSafeMode}
+            incidentLog={incidentLog}
+            smAlerts={smAlerts}
+            smEscalations={smEscalations}
+            violations={violations}
           />
         </div>
 
-        {/* Modals & Overlays */}
-        {weatherModal.visible && (
-          <WeatherControlModal
-            trackId={weatherModal.trackId}
-            trackColor={weatherModal.trackColor}
-            onApply={({ trackId, duration, type }) => {
-              applyWeather(trackId, duration, type);
-            }}
-            onClose={() => setWeatherModal({ visible: false, trackId: '', trackColor: '' })}
-          />
-        )}
-
-        {/* Level 3: Kanchanjunga overlay */}
+        {/* Level 3: Kanchanjunga overlay (natural sim event) */}
         <KanchanjungaOverlay active={kanchanjungaActive} />
+
+        {/* Feature 4: Kanchanjunga Replay (manual button) */}
+        {replayActive && (
+          <KanchanjungaReplay onComplete={onReplayComplete} />
+        )}
       </div>
     </>
   );

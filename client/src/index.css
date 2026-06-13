@@ -658,26 +658,225 @@ html, body, #root {
 }
 
 /* ═══════════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE — Laptop (≥1025px) untouched.
+   Tablet: 769px–1024px
+   Mobile: ≤768px
+   Small Mobile: ≤480px
 ═══════════════════════════════════════════════ */
-@media (max-width: 900px) {
-  :root { --sidebar-w: 280px; }
-  .header-stats { display: none; }
+
+/* ── Tablet: 769px – 1024px ──────────────────── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root {
+    --sidebar-w: 300px;
+    --header-h: 54px;
+  }
+
+  /* Header: hide brand subtitle & compress pills */
   .brand-sub { display: none; }
+  .brand-name { font-size: 15px; }
+  .brand-logo-v2 { width: 34px; height: 34px; font-size: 17px; }
+
+  .header-stats { gap: 4px; }
+  .header-pill { padding: 4px 8px; }
+  .pill-value { font-size: 13px; }
+  .pill-label { font-size: 9px; display: none; }
+
+  /* Live badge: icon only */
+  .live-badge { padding: 5px 10px; font-size: 11px; }
+
+  /* Sidebar: narrower, scrollable */
+  .dashboard-sidebar {
+    width: var(--sidebar-w);
+    overflow-y: auto;
+  }
+
+  .stat-value { font-size: 16px; }
+  .train-card-name { max-width: 110px; }
+  .speed-val { font-size: 13px; }
 }
 
-@media (max-width: 640px) {
+/* ── Mobile: ≤768px ──────────────────────────── */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-w: 100%;
+    --header-h: 50px;
+  }
+
+  /* Full-width layout */
+  html, body, #root { overflow: hidden; }
+
+  /* Header: compact */
+  .header-v2 {
+    padding: 0 12px;
+    gap: 10px;
+    flex-wrap: nowrap;
+  }
+
+  .brand-sub { display: none; }
+  .brand-name { font-size: 14px; }
+  .brand-logo-v2 { width: 30px; height: 30px; font-size: 15px; border-radius: 8px; }
+  .header-brand { gap: 8px; }
+
+  /* Hide stat pills entirely on mobile */
+  .header-stats { display: none; }
+
+  /* Header right: compress */
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .live-badge {
+    padding: 4px 8px;
+    font-size: 10px;
+    gap: 5px;
+  }
+
+  /* Replay button: icon only on mobile */
+  #replay-kanchanjunga {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+
+  /* Safe mode banner: full width */
+  .safemode-banner {
+    right: 0;
+    padding: 7px 12px;
+    font-size: 11px;
+  }
+  .safemode-title { font-size: 11px; }
+  .safemode-sub { display: none; }
+
+  /* Stack map on top, sidebar as scrollable bottom sheet */
   .main-area {
     flex-direction: column;
+    overflow: hidden;
   }
+
+  .map-container {
+    height: 52vh;
+    flex: none;
+    width: 100%;
+  }
+
+  /* Sidebar: horizontal scrollable bottom panel */
   .dashboard-sidebar {
     width: 100%;
-    height: 40vh;
+    height: 48vh;
     border-left: none;
     border-top: 1px solid var(--border-dim);
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-direction: column;
   }
-  .map-container {
-    height: 60vh;
+
+  /* Stats strip: compact */
+  .stat-value { font-size: 15px; }
+  .stat-label { font-size: 8px; }
+  .stat-box { padding: 8px 3px; }
+
+  /* Train cards */
+  .dash-section { padding: 10px; }
+  .train-card { padding: 8px 10px; }
+  .train-card-name { font-size: 11px; max-width: 120px; }
+  .speed-val { font-size: 13px; }
+
+  /* Token log */
+  .log-entry { grid-template-columns: auto 1fr auto; gap: 4px; }
+  .log-token { display: none; } /* hide token ID on small screens */
+
+  /* Loop badge: smaller */
+  .loop-badge {
+    font-size: 10px;
+    padding: 5px 12px;
+    bottom: 12px;
+    white-space: normal;
+    text-align: center;
+    max-width: 85%;
   }
-  .header-stats { display: none; }
+
+  /* Footer */
+  .dash-footer { padding: 8px 12px; }
+  .safe-mode-btn { font-size: 11px; padding: 7px 12px; }
+}
+
+/* ── Small Mobile: ≤480px ────────────────────── */
+@media (max-width: 480px) {
+  :root { --header-h: 46px; }
+
+  .header-v2 { padding: 0 10px; gap: 8px; }
+  .brand-name { font-size: 13px; }
+  .brand-logo-v2 { width: 26px; height: 26px; font-size: 13px; }
+
+  /* Even tighter map/sidebar split */
+  .map-container { height: 48vh; }
+  .dashboard-sidebar { height: 52vh; }
+
+  /* Replay button text: ultra compact */
+  #replay-kanchanjunga {
+    font-size: 9px;
+    padding: 5px 7px;
+  }
+
+  .live-badge { font-size: 9px; padding: 3px 7px; }
+  .live-dot { width: 5px; height: 5px; }
+
+  .stat-value { font-size: 13px; }
+  .train-card-name { max-width: 90px; font-size: 10px; }
+
+  /* Token log: single line entries */
+  .log-entry {
+    grid-template-columns: auto 1fr auto;
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  .log-time { font-size: 8px; }
+}
+
+/* ── Landscape mobile: height constrained ────── */
+@media (max-width: 768px) and (orientation: landscape) {
+  :root { --header-h: 44px; }
+
+  .map-container { height: 65vh; }
+  .dashboard-sidebar {
+    height: 35vh;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .stats-strip { flex-direction: column; width: 70px; flex-shrink: 0; }
+  .stat-box { border-right: none; border-bottom: 1px solid var(--border-dim); }
+
+  .dash-section {
+    flex-shrink: 0;
+    width: 220px;
+    border-bottom: none;
+    border-right: 1px solid var(--border-dim);
+    overflow-y: auto;
+  }
+
+  .dash-footer {
+    flex-shrink: 0;
+    width: 160px;
+    border-top: none;
+    border-left: 1px solid var(--border-dim);
+  }
+}
+
+/* ── Touch: remove hover effects on mobile ────── */
+@media (hover: none) {
+  .train-card:hover { background: var(--bg-card); border-color: var(--border-dim); }
+  .safe-mode-btn:hover { background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.35); }
+  .header-pill:hover { transform: none; }
+}
+
+/* ── Print / Projection mode ──────────────────── */
+@media print {
+  .dashboard-sidebar, .header-right, .loop-badge { display: none !important; }
+  .map-container { height: 100vh; }
 }

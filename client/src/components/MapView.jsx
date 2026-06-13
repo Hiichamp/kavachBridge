@@ -246,39 +246,6 @@ export default function MapView({ trains, zones, tokenAnimations, onTrainSelect 
       }).addTo(map);
     });
 
-    // ── Weather Buttons ─────────────────────────────────────────────────────
-    const weatherButtons = [
-      { trackId: 'track1', lat: 25.55, lng: 85.13, color: '#00E096', label: 'Track 1' },
-      { trackId: 'track2', lat: 26.65, lng: 88.42, color: '#4DA6FF', label: 'Track 2' },
-      { trackId: 'track3', lat: 26.85, lng: 88.35, color: '#FF9D4D', label: 'Track 3' }
-    ];
-
-    weatherButtons.forEach(({ trackId, lat, lng, color, label }) => {
-      L.marker([lat, lng], {
-        icon: L.divIcon({
-          html: `<button style="
-            background: ${color};
-            color: #000;
-            border: 2px solid rgba(255,255,255,0.4);
-            border-radius: 6px;
-            padding: 8px 12px;
-            font-weight: 800;
-            font-size: 11px;
-            font-family: 'JetBrains Mono', monospace;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.6), 0 0 10px ${color}66;
-            transition: transform 0.1s;
-            pointer-events: auto;
-          " onclick="if(window.openWeatherModal) window.openWeatherModal('${trackId}', '${color}')">
-            ☔ ${label} WX
-          </button>`,
-          className: '',
-          iconSize: [100, 34],
-          iconAnchor: [50, 17]
-        }),
-        zIndexOffset: 1000
-      }).addTo(map);
-    });
 
     // ── Station markers ─────────────────────────────────────────────────────
     ALL_STATIONS.forEach((station) => {

@@ -1,14 +1,12 @@
 /**
- * Dashboard.jsx — v2.1 FIXED
- *
- * FIXES:
- * 1. Stats bar wired to live simulation stats (kavach/manual/tokens/loop)
- * 2. Train cards: haversine distance to nearest train on SAME track
- * 3. Conflict alerts wired correctly
- * 4. Token log shows status coloring + live entries
- * 5. Safe mode button + indicator
+ * Dashboard.jsx — v3.0
+ * Added: SM Alert Panel, Speed Violation Panel, Black Box Log.
+ * Sidebar order: Stats → Trains → SM Alerts → Speed Violations → Token Log → Black Box → Footer
  */
 import { useState, useEffect } from 'react';
+import StationAlertPanel   from './StationAlertPanel';
+import SpeedViolationPanel from './SpeedViolationPanel';
+import BlackBoxLog          from './BlackBoxLog';
 
 function haversineKm(lat1, lng1, lat2, lng2) {
   const R = 6371;
@@ -28,8 +26,14 @@ export default function Dashboard({
   stats = {},
   tokenLog = [],
   safeModeActive = false,
-  activeWeather = {},
   onToggleSafeMode,
+  // Feature 1
+  incidentLog = [],
+  // Feature 2
+  smAlerts = [],
+  smEscalations = [],
+  // Feature 3
+  violations = [],
 }) {
   const [expandedId, setExpandedId] = useState(null);
 
@@ -69,7 +73,6 @@ export default function Dashboard({
               train={train}
               trains={trains}
               expanded={expandedId === train.trainId}
-              activeWeather={activeWeather}
               onToggle={() =>
                 setExpandedId((prev) => (prev === train.trainId ? null : train.trainId))
               }
@@ -80,6 +83,18 @@ export default function Dashboard({
           )}
         </div>
       </div>
+
+      {/* ── Feature 2: Station Master Alerts ── */}
+      <div style={{ padding: '0 16px' }}>
+        <StationAlertPanel alerts={smAlerts} escalations={smEscalations} />
+      </div>
+
+      {/* ── Feature 3: Speed Violations (only when active) ── */}
+      {violations.length > 0 && (
+        <div style={{ padding: '0 16px' }}>
+          <SpeedViolationPanel violations={violations} />
+        </div>
+      )}
 
       {/* ── Section B: Token log ── */}
       <div className="dash-section" style={{ flex: 1, minHeight: 0 }}>
@@ -107,39 +122,9 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* ── Section W: Weather Status ── */}
-      <div style={{
-        background: 'rgba(100,100,120,0.1)',
-        border: '1px solid #444',
-        borderRadius: 8,
-        padding: 12,
-        margin: '12px 16px 0 16px'
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#FFD700', marginBottom: 8 }}>
-          🌤️ ACTIVE WEATHER
-        </div>
-        
-        {Object.entries(activeWeather).length === 0 ? (
-          <div style={{ fontSize: 10, color: '#777' }}>
-            No active weather · Tracks clear
-          </div>
-        ) : (
-          Object.entries(activeWeather).map(([trackId, weather]) => (
-            <div key={trackId} style={{
-              fontSize: 10,
-              color: '#FFD700',
-              marginBottom: 6,
-              padding: '6px 8px',
-              background: 'rgba(255,200,0,0.1)',
-              borderRadius: 4,
-              border: '1px solid rgba(255,200,0,0.3)'
-            }}>
-              <strong>{trackId.toUpperCase()}:</strong> {weather.type.toUpperCase()}
-              <br/>Speed limit: {weather.speedLimit} km/h
-              <br/>Time remaining: {Math.max(0, Math.ceil((weather.endTime - Date.now()) / 1000))}s
-            </div>
-          ))
-        )}
+      {/* ── Feature 1: Black Box / Incident Log ── */}
+      <div style={{ padding: '0 16px' }}>
+        <BlackBoxLog logs={incidentLog} />
       </div>
 
       {/* ── Footer: Safe mode toggle ── */}
@@ -204,7 +189,7 @@ function ConflictAlert({ conflict }) {
 }
 
 // ── TrainCard ─────────────────────────────────────────────────────────────────
-function TrainCard({ train, trains, expanded, onToggle, activeWeather }) {
+function TrainCard({ train, trains, expanded, onToggle }) {
   const zoneColor = { kavach: '#00C896', manual: '#FF4444' }[train.zoneType] || '#8896b0';
   const [countdown, setCountdown] = useState(null);
 
@@ -267,17 +252,9 @@ function TrainCard({ train, trains, expanded, onToggle, activeWeather }) {
       </div>
 
       <div className="train-card-meta">
-        <span className="speed-val" style={{ color: activeWeather?.[train.trackId] ? '#FFD700' : zoneColor }}>
+        <span className="speed-val" style={{ color: zoneColor }}>
           {Math.round(train.speed)}<span style={{ fontSize: 9, opacity: 0.6, marginLeft: 2 }}>km/h</span>
         </span>
-        {activeWeather?.[train.trackId] && (
-          <span style={{
-            fontSize: 10, color: '#000',
-            background: '#FFD700',
-            borderRadius: 100, padding: '2px 7px',
-            marginLeft: 6, fontWeight: 700
-          }}>⚠️ WX</span>
-        )}
         {train.tokenState === 'ISSUED' && countdown !== null && (
           <span className="token-countdown">🎫 {countdown}s</span>
         )}
