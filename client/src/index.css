@@ -175,7 +175,11 @@ html, body, #root {
 .header-right {
   flex-shrink: 0;
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+
 
 .live-badge {
   display: flex;
@@ -658,69 +662,85 @@ html, body, #root {
 }
 
 /* ═══════════════════════════════════════════════
-   RESPONSIVE — Laptop (≥1025px) untouched.
-   Tablet: 769px–1024px
-   Mobile: ≤768px
-   Small Mobile: ≤480px
+   RESPONSIVE — Laptop (≥1025px) = UNTOUCHED
+   Tablet:      769px – 1024px
+   Mobile:      ≤768px
+   Small Phone: ≤480px
 ═══════════════════════════════════════════════ */
 
-/* ── Tablet: 769px – 1024px ──────────────────── */
+/* ══════════════════════════════════════════════
+   TABLET: 769px – 1024px
+   • Sidebar 300px, still on the right
+   • Header: brand-sub hidden, pills compact but labels visible
+   • Sidebar scrollable
+══════════════════════════════════════════════ */
 @media (min-width: 769px) and (max-width: 1024px) {
   :root {
     --sidebar-w: 300px;
     --header-h: 54px;
   }
 
-  /* Header: hide brand subtitle & compress pills */
-  .brand-sub { display: none; }
-  .brand-name { font-size: 15px; }
+  .brand-sub   { display: none; }
+  .brand-name  { font-size: 15px; }
   .brand-logo-v2 { width: 34px; height: 34px; font-size: 17px; }
+  .header-brand  { gap: 8px; }
 
-  .header-stats { gap: 4px; }
-  .header-pill { padding: 4px 8px; }
-  .pill-value { font-size: 13px; }
-  .pill-label { font-size: 9px; display: none; }
+  /* Stat pills — keep labels, just smaller */
+  .header-stats  { gap: 4px; flex: 1; justify-content: center; }
+  .header-pill   { padding: 4px 9px; }
+  .pill-value    { font-size: 13px; }
+  .pill-label    { font-size: 9px; letter-spacing: 0.3px; }
 
-  /* Live badge: icon only */
-  .live-badge { padding: 5px 10px; font-size: 11px; }
+  .live-badge    { padding: 5px 10px; font-size: 11px; }
 
-  /* Sidebar: narrower, scrollable */
+  /* Sidebar: scrollable vertically so all panels + footer reachable */
   .dashboard-sidebar {
     width: var(--sidebar-w);
     overflow-y: auto;
+    overflow-x: hidden;
+    flex-direction: column;
   }
 
-  .stat-value { font-size: 16px; }
-  .train-card-name { max-width: 110px; }
-  .speed-val { font-size: 13px; }
+  .stat-value       { font-size: 16px; }
+  .stat-label       { font-size: 8px; }
+  .train-card-name  { max-width: 110px; }
+  .speed-val        { font-size: 13px; }
+
+  /* Dash sections: don't lock height — let sidebar scroll handle it */
+  .dash-section { flex-shrink: 0; }
+  .dash-section:last-of-type { flex: none; }
+
+  /* Footer always at scroll-end */
+  .dash-footer { flex-shrink: 0; }
 }
 
-/* ── Mobile: ≤768px ──────────────────────────── */
+/* ══════════════════════════════════════════════
+   MOBILE: ≤768px
+   • Map top 52vh, sidebar bottom 48vh (scrollable)
+   • Sidebar: ALWAYS vertical column, no horizontal layouts
+   • "Simulate Network Cut" reachable by scrolling sidebar
+══════════════════════════════════════════════ */
 @media (max-width: 768px) {
   :root {
     --sidebar-w: 100%;
     --header-h: 50px;
   }
 
-  /* Full-width layout */
-  html, body, #root { overflow: hidden; }
-
-  /* Header: compact */
+  /* ── Header ── */
   .header-v2 {
     padding: 0 12px;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: nowrap;
+    overflow: hidden;
   }
+  .brand-sub     { display: none; }
+  .brand-name    { font-size: 14px; }
+  .brand-logo-v2 { width: 28px; height: 28px; font-size: 14px; border-radius: 8px; }
+  .header-brand  { gap: 7px; flex-shrink: 0; }
 
-  .brand-sub { display: none; }
-  .brand-name { font-size: 14px; }
-  .brand-logo-v2 { width: 30px; height: 30px; font-size: 15px; border-radius: 8px; }
-  .header-brand { gap: 8px; }
+  /* Pills: move into sidebar stats strip — hide from header */
+  .header-stats  { display: none; }
 
-  /* Hide stat pills entirely on mobile */
-  .header-stats { display: none; }
-
-  /* Header right: compress */
   .header-right {
     display: flex;
     align-items: center;
@@ -728,154 +748,168 @@ html, body, #root {
     margin-left: auto;
     flex-shrink: 0;
   }
+  .live-badge { padding: 4px 8px; font-size: 10px; gap: 4px; }
+  .live-dot   { width: 6px; height: 6px; }
 
-  .live-badge {
-    padding: 4px 8px;
-    font-size: 10px;
-    gap: 5px;
-  }
+  #replay-kanchanjunga { padding: 6px 8px; font-size: 10px; }
 
-  /* Replay button: icon only on mobile */
-  #replay-kanchanjunga {
-    padding: 6px 8px;
-    font-size: 10px;
-  }
-
-  /* Safe mode banner: full width */
+  /* ── Safe mode banner: full width ── */
   .safemode-banner {
     right: 0;
     padding: 7px 12px;
     font-size: 11px;
+    gap: 8px;
   }
   .safemode-title { font-size: 11px; }
-  .safemode-sub { display: none; }
+  .safemode-sub   { display: none; }
 
-  /* Stack map on top, sidebar as scrollable bottom sheet */
+  /* ── Layout: map top, sidebar bottom ── */
   .main-area {
     flex-direction: column;
     overflow: hidden;
   }
-
   .map-container {
-    height: 52vh;
-    flex: none;
     width: 100%;
+    height: 50vh;
+    flex: none;
+    overflow: hidden;
   }
 
-  /* Sidebar: horizontal scrollable bottom panel */
+  /* ── Sidebar: vertical, scrollable, full width ── */
   .dashboard-sidebar {
     width: 100%;
-    height: 48vh;
+    height: 50vh;
     border-left: none;
     border-top: 1px solid var(--border-dim);
-    overflow-y: auto;
-    overflow-x: hidden;
-    flex-direction: column;
+    /* CRITICAL: vertical column, not row */
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    flex-shrink: 0;
   }
 
-  /* Stats strip: compact */
+  /* Stats strip: horizontal row across full width */
+  .stats-strip {
+    flex-direction: row;
+    flex-shrink: 0;
+  }
+  .stat-box   { padding: 8px 4px; }
   .stat-value { font-size: 15px; }
   .stat-label { font-size: 8px; }
-  .stat-box { padding: 8px 3px; }
 
-  /* Train cards */
-  .dash-section { padding: 10px; }
-  .train-card { padding: 8px 10px; }
-  .train-card-name { font-size: 11px; max-width: 120px; }
-  .speed-val { font-size: 13px; }
-
-  /* Token log */
-  .log-entry { grid-template-columns: auto 1fr auto; gap: 4px; }
-  .log-token { display: none; } /* hide token ID on small screens */
-
-  /* Loop badge: smaller */
-  .loop-badge {
-    font-size: 10px;
-    padding: 5px 12px;
-    bottom: 12px;
-    white-space: normal;
-    text-align: center;
-    max-width: 85%;
+  /* Sections: full width, no fixed height — scroll handles it */
+  .dash-section {
+    width: 100%;
+    flex-shrink: 0;
+    padding: 10px 12px;
+    overflow: visible;
+  }
+  .dash-section:last-of-type {
+    flex: none;
   }
 
-  /* Footer */
-  .dash-footer { padding: 8px 12px; }
-  .safe-mode-btn { font-size: 11px; padding: 7px 12px; }
+  /* Train cards */
+  .train-card      { padding: 8px 10px; }
+  .train-card-name { font-size: 11px; max-width: 160px; }
+  .speed-val       { font-size: 13px; }
+
+  /* Token log: 3 columns, no token ID */
+  .log-entry { grid-template-columns: auto 1fr auto; gap: 4px; }
+  .log-token { display: none; }
+
+  /* Footer: full width, always at end */
+  .dash-footer {
+    width: 100%;
+    flex-shrink: 0;
+    padding: 10px 12px;
+  }
+  .safe-mode-btn { font-size: 11px; padding: 8px; width: 100%; }
+
+  /* Loop badge */
+  .loop-badge {
+    font-size: 10px;
+    padding: 5px 10px;
+    bottom: 10px;
+    max-width: 90%;
+  }
+
+  /* Map legend: keep it visible but smaller */
+  .leaflet-control-container .leaflet-bottom.leaflet-left {
+    zoom: 0.8;
+  }
 }
 
-/* ── Small Mobile: ≤480px ────────────────────── */
+/* ══════════════════════════════════════════════
+   SMALL PHONE: ≤480px
+   • Map 45vh, sidebar 55vh (more sidebar space to scroll)
+══════════════════════════════════════════════ */
 @media (max-width: 480px) {
   :root { --header-h: 46px; }
 
-  .header-v2 { padding: 0 10px; gap: 8px; }
-  .brand-name { font-size: 13px; }
-  .brand-logo-v2 { width: 26px; height: 26px; font-size: 13px; }
+  .header-v2     { padding: 0 10px; gap: 6px; }
+  .brand-name    { font-size: 12px; }
+  .brand-logo-v2 { width: 24px; height: 24px; font-size: 12px; border-radius: 6px; }
+  .live-badge    { font-size: 9px; padding: 3px 7px; }
+  .live-dot      { width: 5px; height: 5px; }
 
-  /* Even tighter map/sidebar split */
-  .map-container { height: 48vh; }
-  .dashboard-sidebar { height: 52vh; }
+  #replay-kanchanjunga { font-size: 9px; padding: 5px 6px; }
 
-  /* Replay button text: ultra compact */
-  #replay-kanchanjunga {
-    font-size: 9px;
-    padding: 5px 7px;
-  }
+  /* Give MORE space to sidebar so Network Cut button is reachable */
+  .map-container     { height: 42vh; }
+  .dashboard-sidebar { height: 58vh; }
 
-  .live-badge { font-size: 9px; padding: 3px 7px; }
-  .live-dot { width: 5px; height: 5px; }
+  .stat-value    { font-size: 13px; }
+  .stat-label    { font-size: 7px; }
+  .train-card-name { max-width: 130px; font-size: 10px; }
 
-  .stat-value { font-size: 13px; }
-  .train-card-name { max-width: 90px; font-size: 10px; }
-
-  /* Token log: single line entries */
-  .log-entry {
-    grid-template-columns: auto 1fr auto;
-    font-size: 9px;
-    padding: 3px 6px;
-  }
-  .log-time { font-size: 8px; }
+  .log-entry { font-size: 9px; padding: 3px 5px; }
+  .log-time  { font-size: 8px; }
+  .log-train { font-size: 9px; }
 }
 
-/* ── Landscape mobile: height constrained ────── */
-@media (max-width: 768px) and (orientation: landscape) {
-  :root { --header-h: 44px; }
+/* ══════════════════════════════════════════════
+   LANDSCAPE PHONE: short + wide
+   • Map gets more horizontal space
+   • Sidebar: scrollable at right, not bottom
+══════════════════════════════════════════════ */
+@media (max-width: 768px) and (orientation: landscape) and (max-height: 500px) {
+  :root { --header-h: 42px; --sidebar-w: 260px; }
 
-  .map-container { height: 65vh; }
+  .main-area {
+    flex-direction: row !important;
+    overflow: hidden;
+  }
+  .map-container {
+    height: calc(100vh - var(--header-h));
+    width: auto;
+    flex: 1;
+  }
   .dashboard-sidebar {
-    height: 35vh;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
+    width: var(--sidebar-w) !important;
+    height: calc(100vh - var(--header-h)) !important;
+    border-left: 1px solid var(--border-dim) !important;
+    border-top: none !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
   }
-
-  .stats-strip { flex-direction: column; width: 70px; flex-shrink: 0; }
-  .stat-box { border-right: none; border-bottom: 1px solid var(--border-dim); }
-
-  .dash-section {
-    flex-shrink: 0;
-    width: 220px;
-    border-bottom: none;
-    border-right: 1px solid var(--border-dim);
-    overflow-y: auto;
-  }
-
-  .dash-footer {
-    flex-shrink: 0;
-    width: 160px;
-    border-top: none;
-    border-left: 1px solid var(--border-dim);
-  }
+  .stats-strip    { flex-direction: row; }
+  .stat-value     { font-size: 13px; }
+  .loop-badge     { bottom: 8px; font-size: 9px; }
 }
 
-/* ── Touch: remove hover effects on mobile ────── */
+/* ══════════════════════════════════════════════
+   TOUCH: disable hover states
+══════════════════════════════════════════════ */
 @media (hover: none) {
-  .train-card:hover { background: var(--bg-card); border-color: var(--border-dim); }
-  .safe-mode-btn:hover { background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.35); }
-  .header-pill:hover { transform: none; }
+  .train-card:hover     { background: var(--bg-card); border-color: var(--border-dim); }
+  .safe-mode-btn:hover  { background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.35); }
+  .header-pill:hover    { transform: none; }
 }
 
-/* ── Print / Projection mode ──────────────────── */
+/* ══════════════════════════════════════════════
+   PRINT
+══════════════════════════════════════════════ */
 @media print {
   .dashboard-sidebar, .header-right, .loop-badge { display: none !important; }
   .map-container { height: 100vh; }
