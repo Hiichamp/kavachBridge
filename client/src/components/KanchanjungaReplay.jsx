@@ -15,7 +15,7 @@ const PHASES = [
     color: '#7B0000',
     bg: 'rgba(40,0,0,0.97)',
     icon: '🚂',
-    duration: 2500,
+    duration: 4500,
   },
   {
     id: 'without',
@@ -25,7 +25,7 @@ const PHASES = [
     color: '#CC0000',
     bg: 'rgba(40,0,0,0.97)',
     icon: '📄',
-    duration: 3000,
+    duration: 5000,
   },
   {
     id: 'collision',
@@ -35,7 +35,7 @@ const PHASES = [
     color: '#FF0000',
     bg: 'rgba(60,0,0,0.98)',
     icon: '💥',
-    duration: 3500,
+    duration: 5000,
     shake: true,
   },
   {
@@ -46,7 +46,7 @@ const PHASES = [
     color: '#555',
     bg: 'rgba(5,5,15,0.97)',
     icon: '⏮',
-    duration: 1500,
+    duration: 3000,
   },
   {
     id: 'with',
@@ -56,7 +56,7 @@ const PHASES = [
     color: '#00C896',
     bg: 'rgba(0,20,15,0.97)',
     icon: '🛡',
-    duration: 2500,
+    duration: 4500,
   },
   {
     id: 'l1',
@@ -66,7 +66,7 @@ const PHASES = [
     color: '#FFD700',
     bg: 'rgba(20,15,0,0.97)',
     icon: '⚠️',
-    duration: 2500,
+    duration: 4500,
   },
   {
     id: 'l2',
@@ -76,7 +76,7 @@ const PHASES = [
     color: '#FF4444',
     bg: 'rgba(30,0,0,0.97)',
     icon: '🚨',
-    duration: 2500,
+    duration: 4500,
     flash: true,
   },
   {
@@ -87,7 +87,7 @@ const PHASES = [
     color: '#00C896',
     bg: 'rgba(0,20,12,0.97)',
     icon: '🛡',
-    duration: 4000,
+    duration: 7000,
     glow: true,
   },
 ];
