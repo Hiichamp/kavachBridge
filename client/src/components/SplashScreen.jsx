@@ -27,7 +27,9 @@ export default function SplashScreen({ onStart }) {
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 99999,
-      overflow: 'hidden',
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      padding: '20px',
     }}>
       {/* Animated particles */}
       {particles.map((p) => (
@@ -53,6 +55,7 @@ export default function SplashScreen({ onStart }) {
           linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px)
         `,
         backgroundSize: '60px 60px',
+        minHeight: '100%',
       }} />
 
       {/* Glow orbs */}
@@ -78,18 +81,18 @@ export default function SplashScreen({ onStart }) {
       }} />
 
       {/* Main content */}
-      <div style={{ textAlign: 'center', position: 'relative', zIndex: 2 }}>
+      <div style={{ textAlign: 'center', position: 'relative', zIndex: 2, width: '100%', maxWidth: 800 }}>
         {/* Logo */}
         <div style={{
-          width: 100,
-          height: 100,
-          margin: '0 auto 32px',
+          width: 80,
+          height: 80,
+          margin: '0 auto 24px',
           background: 'linear-gradient(135deg, #00d084 0%, #3b82f6 50%, #8b5cf6 100%)',
-          borderRadius: 28,
+          borderRadius: 24,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 48,
+          fontSize: 40,
           boxShadow: '0 0 60px rgba(0,208,132,0.4), 0 20px 60px rgba(0,0,0,0.5)',
           animation: 'logoPulse 3s ease-in-out infinite',
         }}>
@@ -98,11 +101,11 @@ export default function SplashScreen({ onStart }) {
 
         {/* Title */}
         <div style={{
-          fontSize: 'clamp(40px, 6vw, 72px)',
+          fontSize: 'clamp(36px, 8vw, 72px)',
           fontWeight: 900,
           letterSpacing: '-2px',
-          lineHeight: 1,
-          marginBottom: 12,
+          lineHeight: 1.1,
+          marginBottom: 16,
           background: 'linear-gradient(135deg, #ffffff 0%, #94c7ff 50%, #00d084 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
@@ -113,30 +116,31 @@ export default function SplashScreen({ onStart }) {
 
         {/* Subtitle */}
         <div style={{
-          fontSize: 18,
-          color: 'rgba(255,255,255,0.5)',
+          fontSize: 'clamp(14px, 3vw, 18px)',
+          color: 'rgba(255,255,255,0.85)',
           fontWeight: 500,
           letterSpacing: 2,
           textTransform: 'uppercase',
-          marginBottom: 8,
+          marginBottom: 12,
         }}>
           Digital Safety Layer for Indian Railways
         </div>
 
         {/* Tagline */}
         <div style={{
-          fontSize: 14,
-          color: 'rgba(255,255,255,0.3)',
-          marginBottom: 48,
-          maxWidth: 480,
-          lineHeight: 1.7,
+          fontSize: 'clamp(13px, 2.5vw, 15px)',
+          color: 'rgba(255,255,255,0.7)',
+          marginBottom: 40,
+          maxWidth: 520,
+          margin: '0 auto 40px auto',
+          lineHeight: 1.6,
         }}>
           Bridging Kavach-protected and manual zones with cryptographic tokens —
           preventing the next Kanchanjunga.
         </div>
 
         {/* Feature pills */}
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 56, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 48, flexWrap: 'wrap' }}>
           {[
             { icon: '🚂', label: '3 Live Trains' },
             { icon: '🛤', label: 'Real NE India Tracks' },
@@ -148,12 +152,12 @@ export default function SplashScreen({ onStart }) {
               display: 'flex',
               alignItems: 'center',
               gap: 6,
-              padding: '8px 16px',
+              padding: '8px 14px',
               borderRadius: 100,
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              fontSize: 13,
-              color: 'rgba(255,255,255,0.7)',
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              fontSize: 12,
+              color: 'rgba(255,255,255,0.9)',
               fontWeight: 500,
             }}>
               <span>{f.icon}</span>
@@ -167,8 +171,8 @@ export default function SplashScreen({ onStart }) {
           id="start-demo-btn"
           onClick={onStart}
           style={{
-            padding: '18px 56px',
-            fontSize: 18,
+            padding: '16px 48px',
+            fontSize: 'clamp(16px, 4vw, 18px)',
             fontWeight: 800,
             letterSpacing: 1,
             background: 'linear-gradient(135deg, #00d084, #3b82f6)',
@@ -197,7 +201,7 @@ export default function SplashScreen({ onStart }) {
         <div style={{
           marginTop: 20,
           fontSize: 12,
-          color: 'rgba(255,255,255,0.25)',
+          color: 'rgba(255,255,255,0.6)',
           letterSpacing: 0.5,
         }}>
           No interaction required after start · Simulation runs infinitely
