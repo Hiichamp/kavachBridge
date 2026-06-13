@@ -1,12 +1,7 @@
-/**
- * trainSimulator.js
- * Simulates 5 trains with GPS positions, emitting updates via Socket.io.
- * One train enters "manual" zone after 10 seconds for demo purposes.
- */
-
 const { io } = require('socket.io-client');
 
-const SERVER_URL = process.env.SERVER_URL || 'http://localhost:4000';
+const port = process.env.PORT || 4000;
+const SERVER_URL = process.env.SERVER_URL || `http://localhost:${port}`;
 
 console.log(`🚂 KavachBridge Train Simulator connecting to ${SERVER_URL}...`);
 
