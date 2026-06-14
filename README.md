@@ -98,8 +98,19 @@ kavachBridge/
 │       ├── trackInterpolation.js # Complex Haversine path mathematics
 │       └── zoneGenerator.js      # Zone distribution logic
 └── server/
-    ├── sockets/trainSocket.js    # Bi-directional WebSocket logic
-    └── index.js                  # Express entry point
+    ├── models/
+    │   ├── Token.js              # Mongoose schema for tracking cryptographic tokens
+    │   ├── Train.js              # Mongoose schema for persistent train state
+    │   └── Zone.js               # Mongoose schema for track segments
+    ├── routes/
+    │   ├── tokens.js             # REST API for token issuance and expiration
+    │   └── trains.js             # REST API for retrieving active train stats
+    ├── sockets/
+    │   └── trainSocket.js        # Bi-directional WebSocket logic for real-time UI updates
+    ├── engine/
+    │   └── conflictDetector.js   # Backend redundancy check for collision risks
+    ├── index.js                  # Express.js entry point and MongoDB connection
+    └── trainSimulator.js         # Standalone backend simulation worker script
 ```
 
 ---
